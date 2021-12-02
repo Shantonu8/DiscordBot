@@ -4,6 +4,7 @@ import os
 import requests
 import json
 from keep_alive import keep_alive
+import random
 
 client = commands.Bot(command_prefix='.')
 
@@ -103,6 +104,27 @@ async def joke(ctx):
     print(parsed)
     await ctx.send(parsed["setup"])
     await ctx.send(parsed["delivery"])
+
+@client.command()
+async def darkjoke(ctx):
+    response_one = requests.get("https://v2.jokeapi.dev/joke/Dark?type=twopart")
+    response_two = requests.get("https://v2.jokeapi.dev/joke/Dark?type=single")
+    dumped_two  = json.dumps(response_two.json())
+    parsed_two = json.loads(dumped_two)
+    print(parsed_two)
+    dumped_one  = json.dumps(response_one.json())
+    parsed_one = json.loads(dumped_one)
+    print(parsed_one)
+
+    randomnums = [1, 2] 
+    random_number = random.choice(randomnums)
+    print(random_number) 
+
+    if random_number == 1:
+      await ctx.send(parsed_one["setup"])
+      await ctx.send(parsed_one["delivery"])
+    else:
+      await ctx.send(parsed_two["joke"])
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
